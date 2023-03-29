@@ -19,10 +19,10 @@ specs:
 
   # Add your dependencies below this line
   # -------------------------------------
+  - python=3.9
+  - pip=23.0.1
   - cudatoolkit=11.3.1
   - numpy=1.24.2
-  - pip=23.0.1
-  - python=3.8.0
   - pytorch=1.11.0 #=py3.8_cuda11.3_cudnn8_0
   - torchaudio=0.11.0=py38_cu113
   - torchvision=0.12.0=py38_cu113
