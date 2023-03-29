@@ -1,3 +1,6 @@
 *.pyc
 .DS_Store
 *.zip
+.idea
+aegnn.egg-info
+ncaltech101

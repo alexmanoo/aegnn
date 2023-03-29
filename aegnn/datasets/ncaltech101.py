@@ -55,6 +55,9 @@ class NCaltech101(EventDataModule):
 
     @staticmethod
     def read_label(raw_file: str) -> Optional[Union[str, List[str]]]:
+        import platform
+        if platform.system() == "Windows":
+            return raw_file.split("\\")[-2]
         return raw_file.split("/")[-2]
 
     @staticmethod
