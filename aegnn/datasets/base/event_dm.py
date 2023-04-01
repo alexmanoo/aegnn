@@ -85,20 +85,27 @@ class EventDataModule(pl.LightningDataModule):
 
     def load_processed_file(self, f_path: str) -> Data:
         data = self._load_processed_file(f_path)
+#         print("Loaded file at ", f_path)
+#         print("Data file: ", data)
 
         # Post-Processing on loaded data before giving to data loader. Crop and index the bounding boxes
         # and apply the transform if it is defined.
         if hasattr(data, 'bbox'):
+#             print("  has attribute bbox ")
             data.bbox = data.bbox.view(-1, 5)
             data.bbox = crop_to_frame(data.bbox, image_shape=self.dims)
         if self.transform is not None:
+#             print("  applying self.transform ")
             data = self.transform(data)
 
         # Add a default edge attribute, if the data does not have them already.
         if not hasattr(data, 'edge_attr') or data.edge_attr is None:
+#             print("  adding default edge attr ")
             data = self._add_edge_attributes(data)
 
         # Checking the loaded data for the sake of assuring shape consistency.
+        print("Data pos shape: ", data.pos.shape)
+        print("Data x   shape: ", data.x.shape)
         assert data.pos.shape[0] == data.x.shape[0], "x and pos not matching in length"
         assert data.pos.shape[-1] >= 2
         assert data.x.shape[-1] == 1

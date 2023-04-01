@@ -21,6 +21,7 @@ if __name__ == '__main__':
 
     if torch.cuda.is_available():
         if args.gpu is not None:
+            print("Using GPU...")
             torch.cuda.set_device(args.gpu)
         if args.num_workers > 1:
             torch.multiprocessing.set_start_method("spawn")

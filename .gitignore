@@ -4,3 +4,5 @@
 .idea
 aegnn.egg-info
 ncaltech101
+dataset
+.ipynb_checkpoints

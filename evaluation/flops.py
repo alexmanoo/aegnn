@@ -11,6 +11,8 @@ from torch_geometric.data import Data
 from tqdm import tqdm
 from typing import List
 
+import numpy as np
+
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -122,9 +124,9 @@ if __name__ == '__main__':
     if arguments.debug:
         _ = aegnn.utils.loggers.LoggingLogger(None, name="debug")
 
-    data_module = aegnn.datasets.NCars(batch_size=1, shuffle=False)
+    data_module = aegnn.datasets.NCaltech101(batch_size=1, shuffle=False)
     data_module.setup()
     event_counts = [25000]
-    # event_counts = list(np.linspace(1000, 15000, num=10).astype(int))
+#     event_counts = list(np.linspace(1000, 15000, num=10).astype(int))
     run_experiments(data_module, arguments, experiments=event_counts, num_trials=100,
                     device=torch.device(arguments.device), log_flops=True, log_runtime=True)
