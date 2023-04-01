@@ -36,6 +36,19 @@ To efficiently train the graph neural networks, the event graph is generated off
 specific instructions about the data structure and data pre-processing, please refer to the 
 [dataset's readme](aegnn/datasets/README.md).
 
+### Training
+We use the [PyTorch Lightning](https://www.pytorchlightning.ai/) for training and [WandB](https://wandb.ai/) for
+logging. By default, the logs are stored in `/data/logs/`, this can be changed by setting the `AEGNN_LOG_DIR` 
+environment variable. To run our training pipeline:
+```
+python3 aegnn/scripts/train.py graph_res --task recognition --dataset dataset --gpu X --batch-size X --dim 3
+```
+with tasks `recognition` or `detection`. A list of configuration arguments can be found by calling the `--help` flag. 
+To evaluate the detection pipeline, compute the mAP score on the whole test dataset by running: 
+```
+python3 aegnn/evaluation/map_search.py model --dataset dataset --device X
+```
+
 ## Asynchronous & Sparse Pipeline
 The code allows to make **any graph-based convolutional model** asynchronous & sparse, with a simple command and without 
 the need to change the model's definition or forward function.
