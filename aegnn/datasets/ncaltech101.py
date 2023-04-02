@@ -117,7 +117,7 @@ class NCaltech101(EventDataModule):
         rf_wo_ext, _ = os.path.splitext(rf)
 
         # Load data from raw file. If the according loaders are available, add annotation, label and class id.
-        device = "cpu"  # torch.device(torch.cuda.current_device())
+        device = torch.device(torch.cuda.current_device())  # torch.device(torch.cuda.current_device()) or "cpu"
         data_obj = load_func(rf).to(device)
         data_obj.file_id = os.path.basename(rf)
         if (label := read_label(rf)) is not None:
@@ -142,10 +142,13 @@ class NCaltech101(EventDataModule):
         # Cut-off window of highest increase of events.
         window_us = 50 * 1000
         t = data.pos[data.num_nodes // 2, 2]
+        original_num_nodes = data.num_nodes
+
         index1 = torch.clamp(torch.searchsorted(data.pos[:, 2].contiguous(), t) - 1, 0, data.num_nodes - 1)
         index0 = torch.clamp(torch.searchsorted(data.pos[:, 2].contiguous(), t-window_us) - 1, 0, data.num_nodes - 1)
         for key, item in data:
-            if torch.is_tensor(item) and item.size(0) == data.num_nodes and item.size(0) != 1:
+            # data.num_nodes gets changed after first item is changed => next_item.size != data.num_nodes
+            if torch.is_tensor(item) and item.size(0) == original_num_nodes and item.size(0) != 1:
                 data[key] = item[index0:index1, :]
 
         # Coarsen graph by uniformly sampling n points from the event point cloud.

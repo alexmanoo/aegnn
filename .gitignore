@@ -1,8 +1,17 @@
 *.pyc
 .DS_Store
 *.zip
-.idea
 aegnn.egg-info
-ncaltech101
 dataset
 .ipynb_checkpoints
+
+# IDE related
+.vscode
+.idea
+
+# Dataset related
+ncaltech101
+Caltech101*
+
+# Training related
+logs/

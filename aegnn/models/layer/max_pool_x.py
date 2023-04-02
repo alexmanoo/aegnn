@@ -7,14 +7,15 @@ from typing import List, Optional, Tuple, Union
 
 class MaxPoolingX(torch.nn.Module):
 
-    def __init__(self, voxel_size: List[int], size: int):
+    def __init__(self, voxel_size: torch.Tensor, size: int):
         super(MaxPoolingX, self).__init__()
         self.voxel_size = voxel_size
         self.size = size
 
     def forward(self, x: torch.Tensor, pos: torch.Tensor, batch: Optional[torch.Tensor] = None
                 ) -> Union[Tuple[torch.Tensor, torch.Tensor, torch.LongTensor, torch.Tensor, torch.Tensor], Data]:
-        cluster = voxel_grid(pos, batch, size=self.voxel_size)
+        
+        cluster = voxel_grid(pos, size=self.voxel_size, batch=batch)
         x, _ = max_pool_x(cluster, x, batch, size=self.size)
         return x
 
