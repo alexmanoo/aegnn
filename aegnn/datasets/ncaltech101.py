@@ -117,7 +117,7 @@ class NCaltech101(EventDataModule):
         rf_wo_ext, _ = os.path.splitext(rf)
 
         # Load data from raw file. If the according loaders are available, add annotation, label and class id.
-        device = torch.device(torch.cuda.current_device())  # torch.device(torch.cuda.current_device()) or "cpu"
+        device = torch.device(torch.cuda.current_device()) if torch.cuda.is_available() else "cpu"  # torch.device(torch.cuda.current_device()) or "cpu"
         data_obj = load_func(rf).to(device)
         data_obj.file_id = os.path.basename(rf)
         if (label := read_label(rf)) is not None:
