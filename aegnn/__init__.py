@@ -13,6 +13,6 @@ except ModuleNotFoundError:
 # Consequently, when another system is used, other than the default system, the env variable
 # can simply be changed prior to importing the `aegnn` module.
 aegnn.utils.io.setup_environment({
-    "AEGNN_DATA_DIR": "/home/andrei-carlo/aegnn/",
-    "AEGNN_LOG_DIR": "/home/andrei-carlo/aegnn/logs"
+    "AEGNN_DATA_DIR": "/home/alexmano/aegnn/",
+    "AEGNN_LOG_DIR": "/home/alexmano/aegnn/logs"
 })
