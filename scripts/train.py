@@ -66,6 +66,9 @@ def main(args):
     trainer_kwargs["profiler"] = "simple" if args.profile else False
     trainer_kwargs["weights_summary"] = "full"
     trainer_kwargs["track_grad_norm"] = 2 if args.log_gradients else -1
+    # Fix that uses less memory
+    trainer_kwargs["accumulate_grad_batches"] = 8
+    trainer_kwargs["precision"] = 16
 
     trainer = pl.Trainer.from_argparse_args(args, logger=logger, callbacks=callbacks, **trainer_kwargs)
     trainer.fit(model, datamodule=dm)
@@ -74,4 +77,13 @@ def main(args):
 if __name__ == '__main__':
     arguments = parse_args()
     pl.seed_everything(arguments.seed)
+    
+    # os.environ["CUDA_VISIBLE_DEVICES"] = '0'
+    # os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:512"
+    
+    print("ENV VARIABLES =======")
+    # print("CUDA_VISIBLE_DEVICES = ", os.environ["CUDA_VISIBLE_DEVICES"])
+    # print("PYTORCH_CUDA_ALLOC_CONF = ", os.environ["PYTORCH_CUDA_ALLOC_CONF"])
+    print("Process ID: ", os.getpid())
+
     main(arguments)
