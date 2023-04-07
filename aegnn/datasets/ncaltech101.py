@@ -22,7 +22,7 @@ class NCaltech101(EventDataModule):
                  pin_memory: bool = False, transform: Optional[Callable[[Data], Data]] = None):
         super(NCaltech101, self).__init__(img_shape=(240, 180), batch_size=batch_size, shuffle=shuffle,
                                           num_workers=num_workers, pin_memory=pin_memory, transform=transform)
-        pre_processing_params = {"r": 5.0, "d_max": 32, "n_samples": 25000, "sampling": True}
+        pre_processing_params = {"r": 5.0, "d_max": 32, "n_samples": 1000, "sampling": True}
         self.save_hyperparameters({"preprocessing": pre_processing_params})
 
     def read_annotations(self, raw_file: str) -> Optional[np.ndarray]:

@@ -54,6 +54,7 @@ def main(args):
     checkpoint_path = os.path.join(log_dir, "checkpoints", args.dataset, args.task, experiment_name)
     callbacks = [
         pl.callbacks.LearningRateMonitor(),
+        pl.callbacks.early_stopping.EarlyStopping(monitor="Val/Loss")
         aegnn.utils.callbacks.BBoxLogger(classes=dm.classes),
         aegnn.utils.callbacks.PHyperLogger(args),
         aegnn.utils.callbacks.EpochLogger(),
