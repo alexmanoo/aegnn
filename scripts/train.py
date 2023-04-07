@@ -54,7 +54,7 @@ def main(args):
     checkpoint_path = os.path.join(log_dir, "checkpoints", args.dataset, args.task, experiment_name)
     callbacks = [
         pl.callbacks.LearningRateMonitor(),
-        pl.callbacks.early_stopping.EarlyStopping(monitor="Val/Loss")
+        pl.callbacks.early_stopping.EarlyStopping(monitor="Val/Loss"),
         aegnn.utils.callbacks.BBoxLogger(classes=dm.classes),
         aegnn.utils.callbacks.PHyperLogger(args),
         aegnn.utils.callbacks.EpochLogger(),
@@ -68,8 +68,8 @@ def main(args):
     trainer_kwargs["weights_summary"] = "full"
     trainer_kwargs["track_grad_norm"] = 2 if args.log_gradients else -1
     # Fix that uses less memory
-    trainer_kwargs["accumulate_grad_batches"] = 8
-    trainer_kwargs["precision"] = 16
+    # trainer_kwargs["accumulate_grad_batches"] = 8
+    # trainer_kwargs["precision"] = 16
 
     trainer = pl.Trainer.from_argparse_args(args, logger=logger, callbacks=callbacks, **trainer_kwargs)
     trainer.fit(model, datamodule=dm)
