@@ -28,18 +28,21 @@ class EventDataModule(pl.LightningDataModule):
 
         self.train_dataset = None
         self.val_dataset = None
+        self.test_dataset = None
         self.transform = transform
 
     def prepare_data(self) -> None:
         logging.info("Preparing datasets for loading")
         self._prepare_dataset("training")
         self._prepare_dataset("validation")
+        self._prepare_dataset("test")
 
     def setup(self, stage: Optional[str] = None):
         logging.debug("Load and set up datasets")
         self.train_dataset = self._load_dataset("training")
         self.val_dataset = self._load_dataset("validation")
-        if len(self.train_dataset) == 0 or len(self.val_dataset) == 0:
+        self.test_dataset = self._load_dataset("test")
+        if len(self.train_dataset) == 0 or len(self.val_dataset) == 0 or len(self.test_dataset):
             raise UserWarning("No data found, check AEGNN_DATA_DIR environment variable!")
 
     #########################################################################################################
