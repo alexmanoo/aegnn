@@ -2,6 +2,7 @@ import logging
 
 import torch
 import torch_geometric.nn.conv
+from torch_geometric.nn.pool import knn
 
 from torch_geometric.data import Data
 from torch_geometric.typing import Adj
@@ -72,12 +73,30 @@ def __graph_processing(module, x: torch.Tensor, edge_index = None, edge_attr: to
         pos_all = torch.cat([module.asy_graph.pos, pos_new], dim=0)
 
     logging.debug(f"Subgraph contains {idx_new.numel()} new and {idx_diff.numel()} diff nodes")
+
+
+    test_idx_new_neigh = knn(pos_new, pos_all, k=module.asy_k, batch=None, loop=False)
+    # first_row = pos_all
+    # second row = pos_new
+    test_connected_node_mask = torch.zeros(pos_all.shape[0], pos_new.shape[0], device=x.device, dtype=torch.bool)
+    test_connected_node_mask[test_idx_new_neigh[0], test_idx_new_neigh[1]] = True
+    
+
+    # idx_update = torch.cat([idx_new_neigh, idx_diff])
+    # _, edges_connected, _, connected_edges_mask = k_hop_subgraph(idx_update, num_hops=1,
+    #                                                              edge_index=module.asy_graph.edge_index,
+    #  
+
+
     connected_node_mask = torch.cdist(pos_all, pos_new) <= module.asy_radius
     idx_new_neigh = torch.unique(torch.nonzero(connected_node_mask)[:, 0])
     idx_update = torch.cat([idx_new_neigh, idx_diff])
     _, edges_connected, _, connected_edges_mask = k_hop_subgraph(idx_update, num_hops=1,
                                                                  edge_index=module.asy_graph.edge_index,
                                                                  num_nodes=pos_all.shape[0])
+
+    # Instead of radius, take first K neighbors using knn function
+
 
     edge_attr = None
     if idx_new.numel() > 0:

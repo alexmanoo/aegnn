@@ -3,7 +3,7 @@ import torch_geometric
 
 from torch.nn import Linear
 from torch.nn.functional import elu
-from torch_geometric.nn.conv import SplineConv
+from torch_geometric.nn.conv import SplineConv, SGConv, GMMConv
 from torch_geometric.nn.norm import BatchNorm
 from torch_geometric.transforms import Cartesian
 
@@ -30,23 +30,30 @@ class GraphRes(torch.nn.Module):
         else:
             raise NotImplementedError(f"No model parameters for dataset {dataset}")
 
-        self.conv1 = SplineConv(n[0], n[1], dim=dim, kernel_size=kernel_size, bias=bias, root_weight=root_weight)
+        # self.conv1 = SplineConv(n[0], n[1], dim=dim, kernel_size=kernel_size, bias=bias, root_weight=root_weight)
+        self.conv1 = GMMConv(n[0], n[1], bias=bias, kernel_size=kernel_size, root_weight=root_weight, dim=dim)
         self.norm1 = BatchNorm(in_channels=n[1])
-        self.conv2 = SplineConv(n[1], n[2], dim=dim, kernel_size=kernel_size, bias=bias, root_weight=root_weight)
+        # self.conv2 = SplineConv(n[1], n[2], dim=dim, kernel_size=kernel_size, bias=bias, root_weight=root_weight)
+        self.conv2 = GMMConv(n[1], n[2], bias=bias, kernel_size=kernel_size, root_weight=root_weight, dim=dim)
         self.norm2 = BatchNorm(in_channels=n[2])
 
-        self.conv3 = SplineConv(n[2], n[3], dim=dim, kernel_size=kernel_size, bias=bias, root_weight=root_weight)
+        # self.conv3 = SplineConv(n[2], n[3], dim=dim, kernel_size=kernel_size, bias=bias, root_weight=root_weight)
+        self.conv3 = GMMConv(n[2], n[3], bias=bias, kernel_size=kernel_size, root_weight=root_weight, dim=dim)
         self.norm3 = BatchNorm(in_channels=n[3])
-        self.conv4 = SplineConv(n[3], n[4], dim=dim, kernel_size=kernel_size, bias=bias, root_weight=root_weight)
+        # self.conv4 = SplineConv(n[3], n[4], dim=dim, kernel_size=kernel_size, bias=bias, root_weight=root_weight)
+        self.conv4 = GMMConv(n[3], n[4], bias=bias, kernel_size=kernel_size, root_weight=root_weight, dim=dim)
         self.norm4 = BatchNorm(in_channels=n[4])
 
-        self.conv5 = SplineConv(n[4], n[5], dim=dim, kernel_size=kernel_size, bias=bias, root_weight=root_weight)
+        # self.conv5 = SplineConv(n[4], n[5], dim=dim, kernel_size=kernel_size, bias=bias, root_weight=root_weight)
+        self.conv5 = GMMConv(n[4], n[5], bias=bias, kernel_size=kernel_size, root_weight=root_weight, dim=dim)
         self.norm5 = BatchNorm(in_channels=n[5])
         self.pool5 = MaxPooling(pooling_size, transform=Cartesian(norm=True, cat=False))
 
-        self.conv6 = SplineConv(n[5], n[6], dim=dim, kernel_size=kernel_size, bias=bias, root_weight=root_weight)
+        # self.conv6 = SplineConv(n[5], n[6], dim=dim, kernel_size=kernel_size, bias=bias, root_weight=root_weight)
+        self.conv6 = GMMConv(n[5], n[6], bias=bias, kernel_size=kernel_size, root_weight=root_weight, dim=dim)
         self.norm6 = BatchNorm(in_channels=n[6])
-        self.conv7 = SplineConv(n[6], n[7], dim=dim, kernel_size=kernel_size, bias=bias, root_weight=root_weight)
+        # self.conv7 = SplineConv(n[6], n[7], dim=dim, kernel_size=kernel_size, bias=bias, root_weight=root_weight)
+        self.conv7 = GMMConv(n[6], n[7], bias=bias, kernel_size=kernel_size, root_weight=root_weight, dim=dim)
         self.norm7 = BatchNorm(in_channels=n[7])
 
         self.pool7 = MaxPoolingX(input_shape[:2] // 4, size=16)

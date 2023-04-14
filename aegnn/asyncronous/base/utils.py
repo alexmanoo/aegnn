@@ -1,6 +1,6 @@
 import torch
 
-from torch_geometric.nn.pool import radius_graph
+from torch_geometric.nn.pool import radius_graph, knn_graph
 from typing import Tuple
 
 

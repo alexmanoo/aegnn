@@ -6,7 +6,7 @@ import os
 import torch
 
 from torch_geometric.data import Data
-from torch_geometric.nn.pool import radius_graph
+from torch_geometric.nn.pool import radius_graph, knn_graph
 from torch_geometric.transforms import FixedPoints
 from tqdm import tqdm
 from typing import Callable, Dict, List, Optional, Union
@@ -22,7 +22,7 @@ class NCaltech101(EventDataModule):
                  pin_memory: bool = False, transform: Optional[Callable[[Data], Data]] = None):
         super(NCaltech101, self).__init__(img_shape=(240, 180), batch_size=batch_size, shuffle=shuffle,
                                           num_workers=num_workers, pin_memory=pin_memory, transform=transform)
-        pre_processing_params = {"r": 5.0, "d_max": 32, "n_samples": 1000, "sampling": True}
+        pre_processing_params = {"r": 5.0, "d_max": 32, "n_samples": 1000, "sampling": True, "knn": 0}
         self.save_hyperparameters({"preprocessing": pre_processing_params})
 
     def read_annotations(self, raw_file: str) -> Optional[np.ndarray]:
@@ -157,7 +157,11 @@ class NCaltech101(EventDataModule):
         # Re-weight temporal vs. spatial dimensions to account for different resolutions.
         data.pos[:, 2] = normalize_time(data.pos[:, 2])
         # Radius graph generation.
-        data.edge_index = radius_graph(data.pos, r=params["r"], max_num_neighbors=params["d_max"])
+        if params["knn"] == 0:
+            data.edge_index = radius_graph(data.pos, r=params["r"], max_num_neighbors=params["d_max"])
+        else:
+            data.edge_index = knn_graph(data.pos, k=params["knn"])
+        
         return data
 
     @staticmethod
