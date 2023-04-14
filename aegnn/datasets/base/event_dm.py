@@ -56,6 +56,10 @@ class EventDataModule(pl.LightningDataModule):
     def val_dataloader(self, num_workers: int = 2) -> torch.utils.data.DataLoader:
         return torch.utils.data.DataLoader(self.val_dataset, self.batch_size, num_workers=num_workers,
                                            collate_fn=self.collate_fn, shuffle=False)
+    
+    def test_dataloader(self, num_workers: int = 2) -> torch.utils.data.DataLoader:
+        return torch.utils.data.DataLoader(self.test_dataset, self.batch_size, num_workers=num_workers,
+                                           collate_fn=self.collate_fn, shuffle=False)
 
     #########################################################################################################
     # Processing ############################################################################################
